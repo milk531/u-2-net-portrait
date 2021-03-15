@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 from PIL import Image
+
 #==========================dataset load==========================
 class RescaleT(object):
 
@@ -50,6 +51,10 @@ class Rescale(object):
 	def __call__(self,sample):
 		imidx, image, label = sample['imidx'], sample['image'],sample['label']
 
+		if random.random() >= 0.5:
+			image = image[::-1]
+			label = label[::-1]
+
 		h, w = image.shape[:2]
 
 		if isinstance(self.output_size,int):
@@ -79,6 +84,10 @@ class RandomCrop(object):
 			self.output_size = output_size
 	def __call__(self,sample):
 		imidx, image, label = sample['imidx'], sample['image'], sample['label']
+
+		if random.random() >= 0.5:
+			image = image[::-1]
+			label = label[::-1]
 
 		h, w = image.shape[:2]
 		new_h, new_w = self.output_size
