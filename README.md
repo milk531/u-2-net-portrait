@@ -22,7 +22,7 @@ The model is able to pickup details quite precisely (e.g. hair regions) with ver
 
 The provided checkpoint is compatible with the original u^2-net implementation and code.
 
-![OneDrive](https://1drv.ms/u/s!Am46hiIqzupmhq5V_Zt36ACGjmI6Xg?e=WPhq7y)
+[OneDrive](https://1drv.ms/u/s!Am46hiIqzupmhq5V_Zt36ACGjmI6Xg?e=WPhq7y)
 
 ## Citation
 ```
