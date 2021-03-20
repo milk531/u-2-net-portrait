@@ -16,7 +16,7 @@ class PrefetchLoader:
                 next_input, next_target, next_metadata = self.to_device_handler(batch)
 
             if not first:
-                yield input, target, next_metadata
+                yield input, target, metadata
             else:
                 first = False
 
