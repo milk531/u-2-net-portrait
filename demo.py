@@ -75,7 +75,7 @@ st.image(image, width=800)
 
 transforms = get_transform()
 
-model.train()
+model.eval()
 with torch.no_grad():
     x = transforms(image)
     x = x.to(device=device).unsqueeze(dim=0)
