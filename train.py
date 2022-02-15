@@ -73,8 +73,8 @@ def main(cfg: DictConfig) -> None:
     train_collate_fn = dataset.get_collate_fn(mode='train', channels_last=cfg.trainer.channels_last)
     train_dataloader = instantiate(cfg.dataloader.train,
                                    dataset=train_dataset,
-                                   collate_fn=train_collate_fn,)
-                                #    sampler=sampler)
+                                   collate_fn=train_collate_fn,
+                                   sampler=sampler)
 
     val_collate_fn = dataset.get_collate_fn(mode='val', channels_last=cfg.trainer.channels_last)
     val_dataloader = instantiate(cfg.dataloader.val,

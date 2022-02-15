@@ -1,0 +1,9 @@
+# - torchsummary
+#       - future
+#       - psutil
+#       - torch_optimizer
+#       - hydra-core=1.1.0.dev3
+#       - PyMatting
+
+torch_optimizer
+hydra-core==1.1.1
