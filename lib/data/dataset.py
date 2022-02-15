@@ -5,7 +5,6 @@ from collections import defaultdict
 import cv2
 import numpy as np
 from PIL import Image
-from hydra.utils import instantiate
 from torch.utils.data import Dataset, Subset
 
 from .collate_function import CollateFunction
@@ -21,9 +20,7 @@ class SegmentationDataset(Dataset):
         self.metadata = []
 
         for configuration in self.configurations:
-            print(os.path.join(base_dir,configuration.images_path, '*.*'))
-            images = glob.glob(os.path.join(base_dir,configuration.images_path, '*.jpg'))
-            print(images)
+            images = glob.glob(os.path.join(base_dir,configuration.images_path, configuration.format))
             masks = []
             metadata = []
             for image in images:
@@ -72,7 +69,7 @@ class SegmentationDataset(Dataset):
         transforms = {}
         for configuration in self.configurations:
             steps = configuration.transforms.train if mode == 'train' else configuration.transforms.val
-            transforms[configuration.identifier] = [instantiate(step) for step in steps]
+            transforms[configuration.identifier] = steps
 
         return CollateFunction(Compose(transforms, metadata_key='dataset_identifier'), channels_last)
 

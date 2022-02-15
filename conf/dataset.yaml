@@ -16,6 +16,7 @@ dataset:
         detailed_masks: True
         rgba_masks: False
         weight: 1
+        format: '*.jpg'
         transforms:
           train:
             - _target_: lib.data.transforms.RandomRotation
