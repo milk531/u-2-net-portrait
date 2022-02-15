@@ -21,9 +21,9 @@ from lib.utils.smoothing import gaussian_blur
 
 @hydra.main(config_path='conf', config_name='config')
 def main(cfg: DictConfig) -> None: 
-    if os.environ["SM_CHANNEL_TRAINING"]:
+    if os.environ.get("SM_CHANNEL_TRAINING",''):
         cfg.dataset.train.base_dir = os.environ["SM_CHANNEL_TRAINING"]
-    if os.environ["SM_MODEL_DIR"]:
+    if os.environ.get("SM_MODEL_DIR",''):
         cfg.trainer.output_dir = os.environ["SM_MODEL_DIR"]        
 #     print(cfg.trainer.output_dir)
 #     print(cfg.dataset.train.base_dir)
@@ -40,7 +40,7 @@ def main(cfg: DictConfig) -> None:
                       'You may see unexpected behavior when restarting '
                       'from checkpoints.')
 
-    assert torch.cuda.is_available(), 'This code requires a GPU to train'
+    # assert torch.cuda.is_available(), 'This code requires a GPU to train'
     torch.backends.cudnn.benchmark = True
     assert cfg.trainer.output_dir, 'You need to specify an output directory'
 
@@ -64,10 +64,10 @@ def main(cfg: DictConfig) -> None:
     writer.add_text('hparams', '\r\n'.join(hparams_as_str), global_step=0)
 
     device = torch.device(cfg.trainer.device)
-    assert device.type == 'cuda', 'Only GPU based training is supported'
+    # assert device.type == 'cuda', 'Only GPU based training is supported'
 
     dataset = instantiate(cfg.dataset.train)
-
+    print(dataset.images)
     assert cfg.dataset.val_split is not None, 'Handling a separate validation set is not implemented as of now!'
     train_size = int((1 - cfg.dataset.val_split) * len(dataset))
     val_size = len(dataset) - train_size
