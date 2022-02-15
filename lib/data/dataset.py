@@ -21,7 +21,7 @@ class SegmentationDataset(Dataset):
         self.metadata = []
 
         for configuration in self.configurations:
-            images = glob.glob(os.path.join(configuration.images_path, '*.png'))
+            images = glob.glob(os.path.join(configuration.images_path, '*.jpg'))
 
             masks = []
             metadata = []
