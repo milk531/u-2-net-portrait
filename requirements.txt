@@ -5,5 +5,6 @@
 #       - hydra-core=1.1.0.dev3
 #       - PyMatting
 
-torch_optimizer
-hydra-core==1.1.1
+torch_optimizer==0.3.0
+hydra-core==1.1.0.dev3
+tensorboard==2.4.1

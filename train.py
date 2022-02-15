@@ -20,7 +20,13 @@ from lib.utils.smoothing import gaussian_blur
 
 
 @hydra.main(config_path='conf', config_name='config')
-def main(cfg: DictConfig) -> None:
+def main(cfg: DictConfig) -> None: 
+    if os.environ["SM_CHANNEL_TRAINING"]:
+        cfg.dataset.train.base_dir = os.environ["SM_CHANNEL_TRAINING"]
+    if os.environ["SM_MODEL_DIR"]:
+        cfg.trainer.output_dir = os.environ["SM_MODEL_DIR"]        
+#     print(cfg.trainer.output_dir)
+#     print(cfg.dataset.train.base_dir)
     if cfg.trainer.print_torch_setup is True:
         print_torch_setup()
 

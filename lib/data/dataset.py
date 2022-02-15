@@ -13,20 +13,20 @@ from .transforms import Compose
 
 
 class SegmentationDataset(Dataset):
-    def __init__(self, configurations):
+    def __init__(self, base_dir,configurations):
         self.configurations = configurations
-
+        self.base_dir = base_dir
         self.images = []
         self.masks = []
         self.metadata = []
 
         for configuration in self.configurations:
-            images = glob.glob(os.path.join(configuration.images_path, '*.jpg'))
+            images = glob.glob(os.path.join(base_dir,configuration.images_path, '*.jpg'))
 
             masks = []
             metadata = []
             for image in images:
-                mask_path = os.path.join(configuration.masks_path, f'{os.path.basename(image)}')
+                mask_path = os.path.join(base_dir,configuration.masks_path, f'{os.path.basename(image)}')
                 masks.append(mask_path)
                 metadata.append({
                     'image_path': image,
