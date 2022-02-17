@@ -148,19 +148,26 @@ def main(cfg: DictConfig) -> None:
     for epoch in range(cfg.trainer.start_epoch, cfg.trainer.epochs):
         train_one_epoch(writer, device, model, optimizer, scaler, train_dataloader, epoch, cfg)
         # validate_one_epoch(writer, model, val_dataloader, epoch, cfg)
-        if epoch > 0 and epoch % 100 == 0:
+        if (epoch+1) % 100 == 0:
             checkpoint = {
                 'model': model.state_dict(),
                 'optimizer': optimizer.state_dict(),
                 'scaler': scaler.state_dict(),
                 'epoch': epoch,
-                'cfg': cfg}            
+                'cfg': cfg}
             # save_on_master(
             #     checkpoint,
-            #     os.path.join(cfg.trainer.output_dir, 'model_{}.pth'.format(epoch)))
+            #     os.path.join('/opt/ml/checkpoints/', 'model_{}.pth'.format(epoch)))
             save_on_master(
                 checkpoint,
-                os.path.join(cfg.trainer.model_dir, 'checkpoint.pth'))
+                os.path.join(output_dir, 'checkpoint.pth'))
+
+
+                
+
+    save_on_master(
+                model.state_dict(),
+                os.path.join(cfg.trainer.model_dir, 'model.pth'))
 
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
