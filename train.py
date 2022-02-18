@@ -50,7 +50,8 @@ def main(cfg: DictConfig) -> None:
     output_dir = cfg.trainer.output_dir
 
     print(f'Results will be saved in {output_dir}')
-    writer = SummaryWriter(output_dir)
+    mkdir('/opt/ml/logs')
+    writer = SummaryWriter('/opt/ml/logs')
 
     # this is just a workaround for now
     # hparams logging to a file and as text into tensorboard
@@ -181,7 +182,7 @@ def create_metric_logger(train, epoch, writer):
     else:
         prefix = 'val'
 
-    metric_logger = MetricLogger(epoch=epoch, delimiter="  ", writer=None, experiment_prefix=prefix)
+    metric_logger = MetricLogger(epoch=epoch, delimiter="  ", writer=writer, experiment_prefix=prefix)
 
     if train:
         metric_logger.add_meter('lr', SmoothedValue(window_size=1, fmt='{value}'), log=False)
