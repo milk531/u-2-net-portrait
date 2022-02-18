@@ -149,16 +149,16 @@ def main(cfg: DictConfig) -> None:
         train_one_epoch(writer, device, model, optimizer, scaler, train_dataloader, epoch, cfg)
         # validate_one_epoch(writer, model, val_dataloader, epoch, cfg)
         
-        # if (epoch+1) % 100 == 0:
-        checkpoint = {
-            'model': model.state_dict(),
-            'optimizer': optimizer.state_dict(),
-            'scaler': scaler.state_dict(),
-            'epoch': epoch,
-            'cfg': cfg}
-        save_on_master(
-            checkpoint,
-            os.path.join(cfg.trainer.checkpoint_dir, 'model_{}.pth'.format(epoch)))
+        if (epoch+1) % 100 == 0:
+            checkpoint = {
+                'model': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'scaler': scaler.state_dict(),
+                'epoch': epoch,
+                'cfg': cfg}
+            save_on_master(
+                checkpoint,
+                os.path.join(cfg.trainer.checkpoint_dir, 'checkpoint.pth'))
         # save_on_master(
         #     checkpoint,
         #     os.path.join(output_dir, 'checkpoint.pth'))
@@ -181,7 +181,7 @@ def create_metric_logger(train, epoch, writer):
     else:
         prefix = 'val'
 
-    metric_logger = MetricLogger(epoch=epoch, delimiter="  ", writer=writer, experiment_prefix=prefix)
+    metric_logger = MetricLogger(epoch=epoch, delimiter="  ", writer=None, experiment_prefix=prefix)
 
     if train:
         metric_logger.add_meter('lr', SmoothedValue(window_size=1, fmt='{value}'), log=False)
@@ -270,22 +270,22 @@ def train_one_epoch(writer, device, model, optimizer, scaler, data_loader, epoch
             sample = denormalize(x[:4], mean=cfg.dataset.mean, std=cfg.dataset.std)
             sample_foreground = y_hat[:4].unsqueeze(dim=1).repeat(1,3,1, 1) * sample
 
-            writer.add_image(
-                f'train-metrics/sample',
-                torchvision.utils.make_grid(
-                    [torchvision.utils.make_grid(sample, nrow=4),
-                     torchvision.utils.make_grid(sample_foreground),
-                     torchvision.utils.make_grid(y_hat[:4].unsqueeze(dim=1), nrow=4)], nrow=1),
-                metric_logger.global_step)
+            # writer.add_image(
+            #     f'train-metrics/sample',
+            #     torchvision.utils.make_grid(
+            #         [torchvision.utils.make_grid(sample, nrow=4),
+            #          torchvision.utils.make_grid(sample_foreground),
+            #          torchvision.utils.make_grid(y_hat[:4].unsqueeze(dim=1), nrow=4)], nrow=1),
+            #     metric_logger.global_step)
 
-            writer.add_image(
-                f'train-metrics/loss insights',
-                torchvision.utils.make_grid(
-                    [torchvision.utils.make_grid(aux['l1_mask'][:4].unsqueeze(dim=1), nrow=4),
-                     torchvision.utils.make_grid(aux['l1_detailed_mask'][:4].unsqueeze(dim=1), nrow=4),
-                     torchvision.utils.make_grid(aux['smoothed_mask'][:4].unsqueeze(dim=1), nrow=4),
-                     torchvision.utils.make_grid(aux['mask'][:4].unsqueeze(dim=1), nrow=4)], nrow=1),
-                metric_logger.global_step)
+            # writer.add_image(
+            #     f'train-metrics/loss insights',
+            #     torchvision.utils.make_grid(
+            #         [torchvision.utils.make_grid(aux['l1_mask'][:4].unsqueeze(dim=1), nrow=4),
+            #          torchvision.utils.make_grid(aux['l1_detailed_mask'][:4].unsqueeze(dim=1), nrow=4),
+            #          torchvision.utils.make_grid(aux['smoothed_mask'][:4].unsqueeze(dim=1), nrow=4),
+            #          torchvision.utils.make_grid(aux['mask'][:4].unsqueeze(dim=1), nrow=4)], nrow=1),
+            #     metric_logger.global_step)
 
 
 if __name__ == "__main__":
