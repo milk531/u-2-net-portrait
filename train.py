@@ -148,19 +148,20 @@ def main(cfg: DictConfig) -> None:
     for epoch in range(cfg.trainer.start_epoch, cfg.trainer.epochs):
         train_one_epoch(writer, device, model, optimizer, scaler, train_dataloader, epoch, cfg)
         # validate_one_epoch(writer, model, val_dataloader, epoch, cfg)
-        if (epoch+1) % 100 == 0:
-            checkpoint = {
-                'model': model.state_dict(),
-                'optimizer': optimizer.state_dict(),
-                'scaler': scaler.state_dict(),
-                'epoch': epoch,
-                'cfg': cfg}
-            # save_on_master(
-            #     checkpoint,
-            #     os.path.join('/opt/ml/checkpoints/', 'model_{}.pth'.format(epoch)))
-            save_on_master(
-                checkpoint,
-                os.path.join(output_dir, 'checkpoint.pth'))
+        
+        # if (epoch+1) % 100 == 0:
+        checkpoint = {
+            'model': model.state_dict(),
+            'optimizer': optimizer.state_dict(),
+            'scaler': scaler.state_dict(),
+            'epoch': epoch,
+            'cfg': cfg}
+        save_on_master(
+            checkpoint,
+            os.path.join(cfg.trainer.checkpoint_dir, 'model_{}.pth'.format(epoch)))
+        # save_on_master(
+        #     checkpoint,
+        #     os.path.join(output_dir, 'checkpoint.pth'))
 
 
                 
